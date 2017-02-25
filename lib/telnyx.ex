@@ -1,5 +1,6 @@
 defmodule Telnyx do
   alias Telnyx.{Repo, Product}
+  require Logger
 
   @moduledoc """
   Documentation for Telnyx.
@@ -32,9 +33,12 @@ defmodule Telnyx do
 
   defp create_or_update_product(product, record) do
     new_price = decode_price(record["price"])
-    if product && new_price != product.price && product.name == record["name"] do
+    if new_price != product.price && product.name == record["name"] do
       changeset = Product.changeset(product, %{price: new_price})
       Repo.update! changeset
+    end
+    if product.name != record["name"] do
+      Logger.error "Product with external_product_id #{product.external_product_id} has a name mismatch"
     end
   end
 
