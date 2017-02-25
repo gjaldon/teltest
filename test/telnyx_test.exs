@@ -30,6 +30,18 @@ defmodule TelnyxTest do
     assert updated_product.price == 3025
   end
 
+  test "update_product_records/0 creates new product if it doesn't exist in our DB and isn't discontinued" do
+    assert Repo.all(Product) == []
+    Telnyx.update_product_records()
+    product = Repo.get_by Product, external_product_id: 1
+
+    assert product.external_product_id == 1
+    assert product.price == 3025
+
+    # Product 2 should not exist in our DB since it has been discontinued
+    refute Repo.get_by Product, external_product_id: 2
+  end
+
   test "product has the required fields and associations" do
     product = Repo.insert! %Product{id: 1, external_product_id: 11, price: 200, name: "Test"}
     past_price_record = Repo.insert! %PastPriceRecord{id: 1, price: 250, percentage_change: -0.25, product_id: 1}

@@ -15,7 +15,7 @@ defmodule Telnyx.Product do
 
   def changeset(model, params) do
     model
-    |> Changeset.cast(params, [:price])
+    |> Changeset.cast(params, [:price, :external_product_id, :name])
   end
 
 end
