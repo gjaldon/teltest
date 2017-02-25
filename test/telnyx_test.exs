@@ -2,7 +2,7 @@ defmodule TelnyxTest do
   use ExUnit.Case
   doctest Telnyx
 
-  alias Telnyx.{Repo, Product}
+  alias Telnyx.{Repo, Product, PastPriceRecord}
   import ExUnit.CaptureLog
 
   defmodule HTTPClient do
@@ -21,7 +21,7 @@ defmodule TelnyxTest do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
   end
 
-  test "update_product_records/0 updates records with outdated prices but has same name" do
+  test "update_product_records/0 updates records with outdated prices but matching names and records previous price" do
     old_product = Repo.insert! %Product{id: 1, external_product_id: 1, price: 3000, name: "Nice Chair"}
     Telnyx.update_product_records()
     updated_product = Repo.get Product, 1
@@ -29,6 +29,11 @@ defmodule TelnyxTest do
     assert updated_product != old_product
     assert updated_product.name == old_product.name
     assert updated_product.price == 3025
+
+    previous_price = Repo.get_by PastPriceRecord, product_id: 1
+
+    assert previous_price.price == old_product.price
+    assert previous_price.percentage_change == updated_product.price/old_product.price
   end
 
   test "update_product_records/0 creates new product if it doesn't exist in our DB and isn't discontinued" do
