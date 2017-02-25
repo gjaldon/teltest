@@ -30,6 +30,8 @@ defmodule Telnyx.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:ecto, "~> 2.1.3"},
-     {:postgrex, ">= 0.0.0"}]
+     {:postgrex, ">= 0.0.0"},
+     {:hackney, "~> 1.6.5"},
+     {:poison, "~> 3.0.0"}]
   end
 end
