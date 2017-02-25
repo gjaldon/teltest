@@ -4,9 +4,30 @@ defmodule TelnyxTest do
 
   alias Telnyx.{Repo, Product, PastPriceRecord}
 
-  setup _tags do
+  defmodule HTTPClient do
+    def get(_url) do
+      Poison.encode! %{
+        productRecords: [
+          %{id: 1, name: "Nice Chair", price: "$30.25", category: "home-furnishings", discontinued: false},
+          %{id: 2, name: "Black & White TV", price: "$43.77", category: "electronics", discontinued: true}
+        ]}
+    end
+  end
+
+  setup do
+    Application.put_env(:telnyx, :http_client, HTTPClient)
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
+  end
+
+  test "update_product_records/0 updates records with outdated prices but same name" do
+    old_product = Repo.insert! %Product{id: 1, external_product_id: 1, price: 3000, name: "Nice Chair"}
+    Telnyx.update_product_records()
+    updated_product = Repo.get Product, 1
+
+    assert updated_product != old_product
+    assert updated_product.name == old_product.name
+    assert updated_product.price == 3025
   end
 
   test "product has the required fields and associations" do

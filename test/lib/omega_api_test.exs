@@ -1,7 +1,7 @@
 defmodule Telnyx.OmegaApiTest do
   use ExUnit.Case
   doctest Telnyx
-  alias Telnyx.OmegaApi
+  alias Telnyx.{Repo, OmegaApi}
 
   defmodule HTTPClient do
     def get(_url) do
@@ -14,7 +14,8 @@ defmodule Telnyx.OmegaApiTest do
 
   setup do
     Application.put_env(:telnyx, :http_client, HTTPClient)
-    :ok
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+    Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
   end
 
   test "records_url/0 returns the pricing records url with correct query params" do

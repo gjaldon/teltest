@@ -1,5 +1,6 @@
 defmodule Telnyx.Product do
   use Ecto.Schema
+  alias Ecto.Changeset
 
   schema "products" do
     field :external_product_id, :integer
@@ -10,4 +11,11 @@ defmodule Telnyx.Product do
 
     timestamps()
   end
+
+
+  def changeset(model, params) do
+    model
+    |> Changeset.cast(params, [:price])
+  end
+
 end
