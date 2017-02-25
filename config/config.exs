@@ -32,6 +32,9 @@ use Mix.Config
 config :telnyx, ecto_repos: [Telnyx.Repo]
 
 config :telnyx, :omega_api_key,
-  System.get_env("OMEGA_API_KEY") || "SOME_API_KEY"
+  System.get_env("OMEGA_API_KEY")
+
+config :telnyx, :omega_base_records_url,
+  System.get_env("OMEGA_BASE_RECORDS_URL")
 
 import_config "#{Mix.env}.exs"

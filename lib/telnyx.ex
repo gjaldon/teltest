@@ -47,7 +47,7 @@ defmodule Telnyx do
     end
   end
 
-  def decode_price(price) do
+  defp decode_price(price) do
     price
     |> String.trim("$")
     |> String.to_float()

@@ -1,23 +1,31 @@
 # Telnyx
 
-**TODO: Add description**
-
 ## Setup
 
-1. `mix ecto.create`
-2. `mix ecto.migrate`
+This application requires a running Postgresql DB.
 
-## Installation
+1. `mix deps.get`
+2. `mix ecto.create`
+3. `mix ecto.migrate`
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `telnyx` to your list of dependencies in `mix.exs`:
+## Notes
+The main functionality of this project is exposed by `Telnyx.update_product_records/0`. To use it, open iex via `iex -S mix` and then run it like:
 
 ```elixir
-def deps do
-  [{:telnyx, "~> 0.1.0"}]
-end
+iex> Telnyx.update_product_records()
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/telnyx](https://hexdocs.pm/telnyx).
+- Url for sourcing Omega's pricing records is configurable but defaults to `"https://omegapricinginc.com/pricing/records.json"`. It can be configured by passing an env `OMEGA_BASE_RECORDS_URL` to mix when running the application
+- Omega's api key is configurable too and defaults to `"SOME_API_KEY"`. You can use the env var `OMEGA_API_KEY` to configure it.
+- There are no validations done on the data that we get from the Omega API. The data is expected to have the correct format and have no null values.
+- Only dev and test environments have configs.
+
+## Testing
+
+1. `MIX_ENV=test mix ecto.create`
+2. `mix test`
+
+## Libraries used
+- Ecto and Postgrex - for interfacing with the Postgres DB
+- Hackney - HTTP Client used to get data from Omega's API
+- Poison - for encoding and decoding JSON

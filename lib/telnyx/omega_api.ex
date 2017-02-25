@@ -1,10 +1,8 @@
 defmodule Telnyx.OmegaApi do
-  @records_url "https://omegapricinginc.com/pricing/records.json"
   @one_month 30
-  @adapter Telnyx.HTTPClientAdapter
 
   def get_pricing_records do
-    body = @adapter.get(records_url())
+    body = Telnyx.HTTPClientAdapter.get(records_url())
     Poison.decode! body
   end
 
@@ -21,11 +19,16 @@ defmodule Telnyx.OmegaApi do
           api_key: api_key(),
           start_date: start_date,
           end_date: end_date})
-    "#{@records_url}?#{query_params}"
+    "#{records_base_url()}?#{query_params}"
   end
 
   defp api_key do
-    Application.get_env(:telnyx, :omega_api_key)
+    Application.get_env(:telnyx, :omega_api_key) || "SOME_API_KEY"
+  end
+
+  defp records_base_url do
+    Application.get_env(:telnyx, :omega_base_records_url) ||
+      "https://omegapricinginc.com/pricing/records.json"
   end
 end
 
