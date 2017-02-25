@@ -10,6 +10,7 @@ defmodule Telnyx.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      supervisor(Telnyx.Repo, []),
       # Starts a worker by calling: Telnyx.Worker.start_link(arg1, arg2, arg3)
       # worker(Telnyx.Worker, [arg1, arg2, arg3]),
     ]

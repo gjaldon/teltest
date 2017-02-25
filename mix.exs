@@ -15,7 +15,7 @@ defmodule Telnyx.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger],
+    [extra_applications: [:logger, :ecto, :postgrex],
      mod: {Telnyx.Application, []}]
   end
 
@@ -29,6 +29,7 @@ defmodule Telnyx.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ecto, "~> 2.1.3"}]
+    [{:ecto, "~> 2.1.3"},
+     {:postgrex, ">= 0.0.0"}]
   end
 end
